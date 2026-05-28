@@ -1,0 +1,23 @@
+.
+├── app
+│   ├── __init__.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── storage.py
+│   │   └── task.py
+│   ├── ui
+│   │   ├── __init__.py
+│   │   ├── add_dialog.py
+│   │   ├── main_window.py
+│   │   └── task_item.py
+│   └── utils
+│       ├── __init__.py
+│       └── date_helper.py
+├── assets
+│   └── style.qss
+├── main.py
+├── README.md
+├── requirements.txt
+├── structure.txt
+├── test
+└── test_core.py
