@@ -7,14 +7,12 @@ DATA_FILE = Path(__file__).parent.parent.parent / "todo_data.json"
 
 
 def load_tasks() -> list[Task]:
-    """Load all tasks from the JSON file.
-    Returns an empty list if the file does not exist yet.
-    Converts raw dicts back into typed Task objects.
-    """
     if not DATA_FILE.exists():
         return []
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
-        raw: list[dict] = json.load(f)
+    content = DATA_FILE.read_text(encoding="utf-8").strip()
+    if not content:          # ไฟล์ว่างเปล่า
+        return []
+    raw: list[dict] = json.loads(content)
 
     tasks = []
     for item in raw:
