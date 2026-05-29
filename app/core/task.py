@@ -4,9 +4,9 @@ from enum import Enum
 
 class Priority(str, Enum):
     "Priority levels for tasks."
-    HIGH = "High"
-    MEDIUM = "Medium"
-    LOW = "Low"
+    HIGH    =    "High"
+    MEDIUM  =    "Medium"
+    LOW     =    "Low"
 
 class Status(str, Enum):
     "workflow status for tasks."

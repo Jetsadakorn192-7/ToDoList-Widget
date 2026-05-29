@@ -2,8 +2,9 @@ import unittest
 import sys
 from pathlib import Path
 from datetime import datetime
+import sys
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent / "app"))
 from app.core.task import Task, Priority, Status
 
 # ─── In-memory fake storage (no file I/O) ────────────────────────────────────
