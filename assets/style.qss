@@ -1,91 +1,74 @@
-/* ── Root window ─────────────────────────────────────────────────────────── */
+/* ── Root ────────────────────────────────────────────────────────────────── */
 #root {
     background: #ffffff;
-    border: 0.5px solid #d0d0d0;
-    border-radius: 12px;
-}
-
-/* ── Titlebar ────────────────────────────────────────────────────────────── */
-#titlebar {
-    background: #f6f6f6;
-    border-bottom: 0.5px solid #e0e0e0;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-#winTitle {
-    font-size: 13px;
-    font-weight: 500;
-    color: #666;
-}
-
-/* ── Header ──────────────────────────────────────────────────────────────── */
-#header {
-    background: #ffffff;
-    border-bottom: 0.5px solid #ebebeb;
-}
-#clock {
-    font-size: 20px;
-    font-weight: 500;
-    color: #1a1a1a;
-}
-#clockDate {
-    font-size: 12px;
-    color: #888;
-    margin-left: 8px;
-}
-#searchInput {
-    height: 32px;
-    border: 0.5px solid #ddd;
-    border-radius: 8px;
-    padding: 0 10px;
-    font-size: 13px;
-    background: #f5f5f5;
-    color: #1a1a1a;
-}
-#searchInput:focus {
-    border-color: #aaa;
-    background: #fff;
-    outline: none;
-}
-#btnAdd {
-    height: 32px;
-    padding: 0 14px;
-    background: #e8f0fe;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #1a5cc8;
-}
-#btnAdd:hover {
-    background: #d2e3fc;
-}
-
-/* ── Filter bar ──────────────────────────────────────────────────────────── */
-#filterBar {
-    background: #ffffff;
-    border-bottom: 0.5px solid #ebebeb;
-}
-#filterChip {
-    height: 26px;
-    padding: 0 10px;
-    background: transparent;
     border: 0.5px solid #e0e0e0;
-    border-radius: 99px;
-    font-size: 12px;
-    color: #666;
-}
-#filterChip:hover {
-    background: #f5f5f5;
-}
-#filterChip:checked {
-    background: #1a1a1a;
-    border-color: #1a1a1a;
-    color: #ffffff;
+    border-radius: 16px;
 }
 
-/* ── Task scroll area ────────────────────────────────────────────────────── */
-#taskScroll {
+/* ── Top header ──────────────────────────────────────────────────────────── */
+#top {
+    background: #ffffff;
+}
+#heading {
+    font-size: 22px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+#subheading {
+    font-size: 13px;
+    color: #999;
+}
+#btnNew {
+    padding: 0 16px;
+    background: #f5f5f5;
+    border: 0.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+#btnNew:hover { background: #ebebeb; }
+
+#searchBox {
+    background: #ffffff;
+    border: 0.5px solid #e8e8e8;
+    border-radius: 10px;
+}
+#searchIcon { font-size: 14px; color: #bbb; }
+#searchInput {
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    color: #1a1a1a;
+    padding: 0;
+}
+#searchInput:focus { outline: none; }
+
+/* ── Tab bar ─────────────────────────────────────────────────────────────── */
+#tabBar {
+    background: #ffffff;
+    border-bottom: 0.5px solid #ebebeb;
+}
+#tab {
+    height: 38px;
+    padding: 0 4px;
+    margin-right: 16px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    font-size: 13px;
+    color: #999;
+}
+#tab:hover { color: #555; }
+#tab:checked {
+    color: #1a1a1a;
+    font-weight: 500;
+    border-bottom: 2px solid #1a1a1a;
+}
+
+/* ── Task scroll ─────────────────────────────────────────────────────────── */
+#taskScroll, #taskContainer {
     background: #ffffff;
     border: none;
 }
@@ -94,198 +77,213 @@
     background: transparent;
 }
 #taskScroll QScrollBar::handle:vertical {
-    background: #ddd;
+    background: #e0e0e0;
     border-radius: 2px;
     min-height: 20px;
-}
-#taskContainer {
-    background: #ffffff;
 }
 
 /* ── Task item ───────────────────────────────────────────────────────────── */
 #taskItem {
     background: #ffffff;
-    border-bottom: 0.5px solid #f0f0f0;
+    border-bottom: 0.5px solid #f5f5f5;
 }
-#taskItem:hover {
-    background: #fafafa;
-}
+#taskItem:hover { background: #fafafa; }
+
 #taskTitle {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     color: #1a1a1a;
 }
 #taskTitleDone {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
-    color: #aaa;
+    color: #bbb;
     text-decoration: line-through;
 }
 #taskDesc {
     font-size: 12px;
-    color: #888;
-}
-#taskId {
-    font-size: 11px;
-    color: #bbb;
+    color: #aaa;
 }
 
-/* Check buttons */
+/* Check circles */
 #checkPending {
     background: transparent;
-    border: 0.5px solid #ccc;
+    border: 0.5px solid #d0d0d0;
     border-radius: 10px;
-    font-size: 12px;
     color: transparent;
+    font-size: 11px;
 }
-#checkPending:hover {
-    border-color: #888;
-    color: #888;
-}
+#checkPending:hover { border-color: #999; }
 #checkDone {
-    background: #e6f4ea;
-    border: 0.5px solid #a8d5b5;
+    background: #eaf3de;
+    border: 0.5px solid #c0dd97;
     border-radius: 10px;
-    font-size: 12px;
-    color: #2e7d32;
+    color: #3b6d11;
+    font-size: 11px;
 }
 
 /* Priority badges */
-#badge-high {
+#badgeHigh {
     background: #fce8e8;
-    color: #b71c1c;
+    color: #a32d2d;
     border-radius: 99px;
-    padding: 2px 8px;
+    padding: 3px 8px;
     font-size: 11px;
+    font-weight: 500;
 }
-#badge-medium {
-    background: #fef3e2;
-    color: #8d4e00;
+#badgeMedium {
+    background: #faeeda;
+    color: #854f0b;
     border-radius: 99px;
-    padding: 2px 8px;
+    padding: 3px 8px;
     font-size: 11px;
+    font-weight: 500;
 }
-#badge-low {
-    background: #e8f5e9;
-    color: #1b5e20;
+#badgeLow {
+    background: #eaf3de;
+    color: #3b6d11;
     border-radius: 99px;
-    padding: 2px 8px;
+    padding: 3px 8px;
     font-size: 11px;
+    font-weight: 500;
 }
-#badgeStatus {
+
+/* Status badges */
+#badgeInProgress {
+    background: #e6f1fb;
+    color: #185fa5;
+    border-radius: 99px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 500;
+}
+#badgePending {
+    background: #faeeda;
+    color: #854f0b;
+    border-radius: 99px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 500;
+}
+#badgeNoStatus {
     background: #f5f5f5;
-    color: #666;
+    color: #888;
+    border: 0.5px solid #e8e8e8;
     border-radius: 99px;
-    padding: 2px 8px;
+    padding: 3px 8px;
     font-size: 11px;
 }
+#badgeDone {
+    background: #eaf3de;
+    color: #3b6d11;
+    border-radius: 99px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 500;
+}
 
-/* Deadline labels */
-#due-overdue { font-size: 11px; color: #c62828; }
-#due-today   { font-size: 11px; color: #e65100; font-weight: 500; }
-#due-soon    { font-size: 11px; color: #f57f17; }
-#due-normal  { font-size: 11px; color: #888; }
+/* Due date label */
+#dueLabel {
+    font-size: 11px;
+    color: #bbb;
+}
 
-/* Menu button */
-#btnMenu {
+/* Dots menu button */
+#btnDots {
     background: transparent;
     border: none;
-    font-size: 16px;
-    color: #bbb;
-    border-radius: 4px;
+    font-size: 18px;
+    color: #ccc;
+    border-radius: 6px;
+    letter-spacing: 1px;
 }
-#btnMenu:hover {
-    background: #f0f0f0;
-    color: #444;
+#btnDots:hover {
+    background: #f5f5f5;
+    color: #555;
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 #footer {
-    background: #f9f9f9;
+    background: #ffffff;
     border-top: 0.5px solid #ebebeb;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
 }
 #footerStats {
     font-size: 12px;
-    color: #999;
+    color: #bbb;
 }
-#btnIcon {
+#btnTrash {
     background: transparent;
     border: none;
     font-size: 16px;
-    color: #bbb;
-    border-radius: 4px;
-    padding: 4px 6px;
+    color: #ccc;
+    border-radius: 6px;
 }
-#btnIcon:hover {
-    background: #ebebeb;
-    color: #555;
+#btnTrash:hover {
+    background: #f5f5f5;
+    color: #888;
 }
 
 /* ── Add/Edit dialog ─────────────────────────────────────────────────────── */
 #addDialog {
     background: #ffffff;
-    border: 0.5px solid #d0d0d0;
-    border-radius: 12px;
+    border: 0.5px solid #e0e0e0;
+    border-radius: 16px;
 }
 #dialogHeading {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
     color: #1a1a1a;
-    margin-bottom: 4px;
 }
 #dialogLabel {
     font-size: 12px;
-    color: #888;
+    color: #999;
+    margin-bottom: 2px;
 }
 #dialogInput {
-    height: 34px;
-    border: 0.5px solid #ddd;
+    border: 0.5px solid #e8e8e8;
     border-radius: 8px;
-    padding: 0 10px;
+    padding: 0 12px;
     font-size: 13px;
-    background: #f9f9f9;
+    background: #fafafa;
     color: #1a1a1a;
 }
 #dialogInput:focus {
-    border-color: #999;
-    background: #fff;
+    border-color: #bbb;
+    background: #ffffff;
 }
 #dialogTextArea {
-    border: 0.5px solid #ddd;
+    border: 0.5px solid #e8e8e8;
     border-radius: 8px;
-    padding: 6px 10px;
+    padding: 8px 12px;
     font-size: 13px;
-    background: #f9f9f9;
+    background: #fafafa;
     color: #1a1a1a;
 }
 #dialogSelect {
-    height: 34px;
-    border: 0.5px solid #ddd;
+    height: 36px;
+    border: 0.5px solid #e8e8e8;
     border-radius: 8px;
     padding: 0 8px;
     font-size: 13px;
-    background: #f9f9f9;
+    background: #fafafa;
     color: #1a1a1a;
 }
 #dialogError {
     font-size: 12px;
     color: #c62828;
+    min-height: 16px;
 }
 #btnCancel {
-    flex: 1;
-    height: 34px;
     background: #f5f5f5;
-    border: 0.5px solid #ddd;
+    border: 0.5px solid #e8e8e8;
     border-radius: 8px;
     font-size: 13px;
     color: #555;
 }
 #btnCancel:hover { background: #ebebeb; }
 #btnSave {
-    flex: 1;
-    height: 34px;
     background: #1a1a1a;
     border: none;
     border-radius: 8px;
@@ -293,15 +291,16 @@
     font-weight: 500;
     color: #ffffff;
 }
-#btnSave:hover { background: #333; }
+#btnSave:hover { background: #333333; }
 
-/* ── Context menu ────────────────────────────────────────────────────────── */
-#taskMenu {
-    background: #fff;
-    border: 0.5px solid #ddd;
+/* Context menu */
+QMenu {
+    background: #ffffff;
+    border: 0.5px solid #e0e0e0;
     border-radius: 8px;
     padding: 4px 0;
     font-size: 13px;
 }
-#taskMenu::item { padding: 6px 16px; color: #1a1a1a; }
-#taskMenu::item:selected { background: #f5f5f5; }
+QMenu::item { padding: 7px 16px; color: #1a1a1a; }
+QMenu::item:selected { background: #f5f5f5; }
+QMenu::separator { height: 0.5px; background: #ebebeb; margin: 4px 0; }

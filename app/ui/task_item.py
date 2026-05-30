@@ -1,5 +1,5 @@
 """
-app/ui/task_item.py — Individual task row widget
+app/ui/task_item.py — Task row widget v2
 """
 from PyQt6.QtWidgets import (
     QWidget, QHBoxLayout, QVBoxLayout,
@@ -12,12 +12,22 @@ from app.core.task import Task, Priority, Status
 from datetime import date
 
 
+# Map priority to (badge text, QSS object name)
 PRIORITY_BADGE = {
-    Priority.HIGH:   ("▲ high",   "badge-high"),
-    Priority.MEDIUM: ("● medium", "badge-medium"),
-    Priority.LOW:    ("▽ low",    "badge-low"),
+    Priority.HIGH:   ("↑ High",   "badgeHigh"),
+    Priority.MEDIUM: ("● Medium", "badgeMedium"),
+    Priority.LOW:    ("↓ Low",    "badgeLow"),
 }
 
+# Map status to QSS object name
+STATUS_BADGE = {
+    Status.NOT_STARTED: "badgeNoStatus",
+    Status.IN_PROGRESS: "badgeInProgress",
+    Status.PENDING:     "badgePending",
+    Status.DONE:        "badgeDone",
+}
+
+# Clicking check cycles to the next logical status
 STATUS_NEXT = {
     Status.NOT_STARTED: Status.IN_PROGRESS,
     Status.IN_PROGRESS: Status.DONE,
@@ -26,23 +36,17 @@ STATUS_NEXT = {
 }
 
 
-def _deadline_label(due_at: str | None) -> tuple[str, str]:
-    """Return (text, css_class) for deadline display."""
+def _due_text(due_at: str | None) -> str:
     if not due_at:
-        return "", ""
+        return "DD-MM-YYYY"
     try:
         dl   = date.fromisoformat(due_at[:10])
         diff = (dl - date.today()).days
         if diff < 0:
-            return f"! เกินกำหนด {abs(diff)}วัน", "due-overdue"
-        elif diff == 0:
-            return "◷ วันนี้!", "due-today"
-        elif diff <= 3:
-            return f"◷ อีก {diff}วัน", "due-soon"
-        else:
-            return f"◷ {due_at[:10]}", "due-normal"
+            return f"Overdue {abs(diff)}d"
+        return dl.strftime("%d-%m-%Y")
     except ValueError:
-        return "", ""
+        return due_at[:10]
 
 
 class TaskItem(QWidget):
@@ -60,37 +64,37 @@ class TaskItem(QWidget):
         done = t.status == Status.DONE
 
         outer = QHBoxLayout(self)
-        outer.setContentsMargins(14, 10, 14, 10)
-        outer.setSpacing(10)
+        outer.setContentsMargins(20, 14, 20, 14)
+        outer.setSpacing(12)
 
-        # ── Check button ──────────────────────────────────────────────────
-        check = QPushButton("✓" if done else "○")
+        # ── Check circle ──────────────────────────────────────────────────
+        check = QPushButton("✓" if done else "")
         check.setObjectName("checkDone" if done else "checkPending")
         check.setFixedSize(20, 20)
-        check.setToolTip("คลิกเพื่อเปลี่ยนสถานะ")
-        check.clicked.connect(lambda: self._on_status(t, STATUS_NEXT[t.status]))
+        check.setToolTip("เปลี่ยนสถานะ")
+        check.clicked.connect(
+            lambda: self._on_status(t, STATUS_NEXT[t.status])
+        )
         outer.addWidget(check, alignment=Qt.AlignmentFlag.AlignTop)
 
-        # ── Task body ─────────────────────────────────────────────────────
+        # ── Body ──────────────────────────────────────────────────────────
         body = QVBoxLayout()
-        body.setSpacing(4)
+        body.setSpacing(3)
 
         title = QLabel(t.title)
         title.setObjectName("taskTitleDone" if done else "taskTitle")
-        title.setWordWrap(True)
         body.addWidget(title)
 
-        # Description (if any)
         if t.description:
             desc = QLabel(t.description)
             desc.setObjectName("taskDesc")
-            desc.setWordWrap(True)
+            desc.setMaximumWidth(240)
             body.addWidget(desc)
 
-        # Meta row: priority badge + status badge + deadline
+        # Meta row
         meta = QHBoxLayout()
         meta.setSpacing(6)
-        meta.setContentsMargins(0, 0, 0, 0)
+        meta.setContentsMargins(0, 4, 0, 0)
 
         pri_text, pri_class = PRIORITY_BADGE[t.priority]
         pri_lbl = QLabel(pri_text)
@@ -98,38 +102,25 @@ class TaskItem(QWidget):
         meta.addWidget(pri_lbl)
 
         status_lbl = QLabel(t.status.value)
-        status_lbl.setObjectName("badgeStatus")
+        status_lbl.setObjectName(STATUS_BADGE.get(t.status, "badgeNoStatus"))
         meta.addWidget(status_lbl)
 
-        dl_text, dl_class = _deadline_label(t.due_at)
-        if dl_text:
-            dl_lbl = QLabel(dl_text)
-            dl_lbl.setObjectName(dl_class)
-            meta.addWidget(dl_lbl)
+        due_lbl = QLabel(_due_text(t.due_at))
+        due_lbl.setObjectName("dueLabel")
+        meta.addWidget(due_lbl)
 
         meta.addStretch()
         body.addLayout(meta)
         outer.addLayout(body, stretch=1)
 
-        # ── Right side: ID + action menu ──────────────────────────────────
-        right = QVBoxLayout()
-        right.setSpacing(4)
-        right.setAlignment(Qt.AlignmentFlag.AlignTop)
-
-        id_lbl = QLabel(f"#{t.id}")
-        id_lbl.setObjectName("taskId")
-
+        # ── Menu button ───────────────────────────────────────────────────
         btn_menu = QPushButton("···")
-        btn_menu.setObjectName("btnMenu")
-        btn_menu.setFixedSize(24, 24)
+        btn_menu.setObjectName("btnDots")
+        btn_menu.setFixedSize(28, 28)
         btn_menu.clicked.connect(self._show_menu)
-
-        right.addWidget(id_lbl)
-        right.addWidget(btn_menu)
-        outer.addLayout(right)
+        outer.addWidget(btn_menu, alignment=Qt.AlignmentFlag.AlignTop)
 
     def _show_menu(self):
-        """Context menu for task actions."""
         menu = QMenu(self)
         menu.setObjectName("taskMenu")
 
