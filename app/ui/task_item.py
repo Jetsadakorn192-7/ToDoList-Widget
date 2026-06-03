@@ -1,5 +1,5 @@
 """
-app/ui/task_item.py — Task row widget v2
+app/ui/task_item.py
 """
 from PyQt6.QtWidgets import (
     QWidget, QHBoxLayout, QVBoxLayout,
@@ -12,22 +12,19 @@ from app.core.task import Task, Priority, Status
 from datetime import date
 
 
-# Map priority to (badge text, QSS object name)
 PRIORITY_BADGE = {
     Priority.HIGH:   ("↑ High",   "badgeHigh"),
     Priority.MEDIUM: ("● Medium", "badgeMedium"),
     Priority.LOW:    ("↓ Low",    "badgeLow"),
 }
 
-# Map status to QSS object name
 STATUS_BADGE = {
-    Status.NOT_STARTED: "badgeNoStatus",
-    Status.IN_PROGRESS: "badgeInProgress",
-    Status.PENDING:     "badgePending",
-    Status.DONE:        "badgeDone",
+    Status.NOT_STARTED: ("No Status",   "badgeNoStatus"),
+    Status.IN_PROGRESS: ("In Progress", "badgeInProgress"),
+    Status.PENDING:     ("Pending",     "badgePending"),
+    Status.DONE:        ("Done",        "badgeDone"),
 }
 
-# Clicking check cycles to the next logical status
 STATUS_NEXT = {
     Status.NOT_STARTED: Status.IN_PROGRESS,
     Status.IN_PROGRESS: Status.DONE,
@@ -64,20 +61,10 @@ class TaskItem(QWidget):
         done = t.status == Status.DONE
 
         outer = QHBoxLayout(self)
-        outer.setContentsMargins(20, 14, 20, 14)
-        outer.setSpacing(12)
+        outer.setContentsMargins(20, 14, 16, 14)
+        outer.setSpacing(10)
 
-        # ── Check circle ──────────────────────────────────────────────────
-        check = QPushButton("✓" if done else "")
-        check.setObjectName("checkDone" if done else "checkPending")
-        check.setFixedSize(20, 20)
-        check.setToolTip("เปลี่ยนสถานะ")
-        check.clicked.connect(
-            lambda: self._on_status(t, STATUS_NEXT[t.status])
-        )
-        outer.addWidget(check, alignment=Qt.AlignmentFlag.AlignTop)
-
-        # ── Body ──────────────────────────────────────────────────────────
+        # ── Body (left, stretchy) ─────────────────────────────────────────
         body = QVBoxLayout()
         body.setSpacing(3)
 
@@ -88,37 +75,47 @@ class TaskItem(QWidget):
         if t.description:
             desc = QLabel(t.description)
             desc.setObjectName("taskDesc")
-            desc.setMaximumWidth(240)
+            desc.setWordWrap(True)
+            desc.setMaximumWidth(220)
             body.addWidget(desc)
 
-        # Meta row
+        # Meta row: [priority] [status] [date] stretch [···]
         meta = QHBoxLayout()
         meta.setSpacing(6)
         meta.setContentsMargins(0, 4, 0, 0)
 
-        pri_text, pri_class = PRIORITY_BADGE[t.priority]
+        pri_text, pri_cls = PRIORITY_BADGE[t.priority]
         pri_lbl = QLabel(pri_text)
-        pri_lbl.setObjectName(pri_class)
+        pri_lbl.setObjectName(pri_cls)
         meta.addWidget(pri_lbl)
 
-        status_lbl = QLabel(t.status.value)
-        status_lbl.setObjectName(STATUS_BADGE.get(t.status, "badgeNoStatus"))
-        meta.addWidget(status_lbl)
+        st_text, st_cls = STATUS_BADGE.get(t.status, ("No Status", "badgeNoStatus"))
+        st_lbl = QLabel(st_text)
+        st_lbl.setObjectName(st_cls)
+        meta.addWidget(st_lbl)
 
         due_lbl = QLabel(_due_text(t.due_at))
         due_lbl.setObjectName("dueLabel")
         meta.addWidget(due_lbl)
 
         meta.addStretch()
+
+        btn_menu = QPushButton("···")
+        btn_menu.setObjectName("btnDots")
+        btn_menu.setFixedSize(24, 20)
+        btn_menu.clicked.connect(self._show_menu)
+        meta.addWidget(btn_menu)
+
         body.addLayout(meta)
         outer.addLayout(body, stretch=1)
 
-        # ── Menu button ───────────────────────────────────────────────────
-        btn_menu = QPushButton("···")
-        btn_menu.setObjectName("btnDots")
-        btn_menu.setFixedSize(28, 28)
-        btn_menu.clicked.connect(self._show_menu)
-        outer.addWidget(btn_menu, alignment=Qt.AlignmentFlag.AlignTop)
+        # ── Circle check (right, top-aligned) ────────────────────────────
+        check = QPushButton()
+        check.setObjectName("checkDone" if done else "checkPending")
+        check.setFixedSize(20, 20)
+        check.setToolTip("เปลี่ยนสถานะ")
+        check.clicked.connect(lambda: self._on_status(t, STATUS_NEXT[t.status]))
+        outer.addWidget(check, alignment=Qt.AlignmentFlag.AlignTop)
 
     def _show_menu(self):
         menu = QMenu(self)

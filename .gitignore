@@ -6,3 +6,6 @@ todo_data.json
 .DS_Store
 .vscode/
 .idea/
+build/
+dist/
+*.spec
